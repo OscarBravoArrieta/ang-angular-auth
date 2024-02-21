@@ -56,13 +56,11 @@
          if (this.form.valid) {
              this.status = 'loading'
              const { name, email, password } = this.form.getRawValue()
-             this.authService.register(name, email, password)
+             this.authService.registerAndLogin(name, email, password)
              .subscribe({
                  next: () => {
                      this.status = 'succes'
-                     this.router.navigate(['/login'],{
-                         queryParams: { email }
-                     })
+                     this.router.navigate(['/app/boards'])
                  },
                  error: (error) => {
                      this.status = 'failed'

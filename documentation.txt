@@ -1,1 +1,2 @@
 Api de usuarios: https://fake-trello-api.herokuapp.com/docs
+Para manejo de cockies: npm install typescript-cookie --save

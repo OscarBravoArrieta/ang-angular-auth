@@ -2,6 +2,7 @@
  import { HttpClient } from '@angular/common/http'
 
  import { environment } from '@environments/environment'
+ import { switchMap } from 'rxjs/operators'
 
  @Injectable({
      providedIn: 'root'
@@ -18,7 +19,7 @@
 
      login(email: string, password: string) {
 
-         return this.http.post(`${this.apiUrl}/api/v1/auth`, {
+         return this.http.post(`${this.apiUrl}/api/v1/auth/login`, {
              email,
              password
          })
@@ -47,10 +48,38 @@
 
      }
 
+     // --------------------------------------------------------------------------------------------
 
+     registerAndLogin (name: string, email: string, password: string) {
 
-
+         return this.register(name, email, password)
+         .pipe(
+             switchMap(() => this.login(email, password))
+         )
+     }
 
      // --------------------------------------------------------------------------------------------
+
+     recovery(email: string) {
+
+         return this.http.post(`${this.apiUrl}/api/v1/auth/recovery`, {
+             email
+         })
+
+     }
+
+     // --------------------------------------------------------------------------------------------
+
+     changePassword(token: string, newPassword: string) {
+
+         return this.http.post(`${this.apiUrl}/api/v1/auth/change-password`, {
+             token,
+             newPassword
+         })
+
+     }
+
+     // --------------------------------------------------------------------------------------------
+
 
  }
