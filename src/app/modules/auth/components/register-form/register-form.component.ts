@@ -14,6 +14,12 @@
  })
  export class RegisterFormComponent {
 
+     formUser = this.formBuilder.nonNullable.group({
+
+         email: ['', [Validators.email, Validators.required]],
+
+     })
+
      form = this.formBuilder.nonNullable.group({
          name: ['', [Validators.required]],
          email: ['', [Validators.email, Validators.required]],
@@ -26,9 +32,11 @@
      // -------------------------------------------------------------------------------------------
 
      status: string = 'init'
+     statusUser: string = 'init'
      faEye = faEye
      faEyeSlash = faEyeSlash
      showPassword = false
+     showRegister = false
 
      private authService = inject(AuthService)
      private router = inject(Router)
@@ -52,17 +60,57 @@
              .subscribe({
                  next: () => {
                      this.status = 'succes'
-                     this.router.navigate(['/login'])
+                     this.router.navigate(['/login'],{
+                         queryParams: { email }
+                     })
                  },
-                 error: () => {
-                     this.status = 'error'
-
+                 error: (error) => {
+                     this.status = 'failed'
+                     console.log(error)
                  }
              })
              console.log(name, email, password)
          } else {
              this.form.markAllAsTouched()
-        }
+         }
+
+     }
+
+     // -------------------------------------------------------------------------------------------
+
+     validateUser() {
+
+         if (this.formUser.valid) {
+
+             this.statusUser = 'loading'
+             const { email } = this.formUser.getRawValue()
+             this.authService.isAvailabel(email)
+             .subscribe({
+                 next: (rta) => {
+                     console.log(rta)
+                     this.statusUser = 'succes'
+                     if(rta.isAvailable) {
+                         this.showRegister = true
+
+                         this.form.controls.email.setValue(email)
+
+                     }else {
+                         this.router.navigate(['/login'], {
+                             queryParams: { email }
+                         })
+                     }
+
+                 },
+                 error: (error) => {
+                     this.statusUser = 'failed'
+                     console.log(error)
+                 }
+             })
+
+
+         } else {
+             this.formUser.markAllAsTouched()
+         }
 
      }
 
