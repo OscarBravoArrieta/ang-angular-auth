@@ -11,7 +11,6 @@
 
      saveToken(token: string) {
 
-         //localStorage.setItem('token', token)
          setCookie('token-trello', token, {expires: 365, path: '/'})
 
      }
@@ -20,8 +19,8 @@
 
      getToken() {
 
-         //localStorage.setItem('token', token)
          const token = getCookie('token-trello')
+         return token
 
      }
 

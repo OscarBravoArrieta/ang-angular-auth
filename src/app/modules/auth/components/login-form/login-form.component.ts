@@ -3,6 +3,7 @@
  import { Router, ActivatedRoute } from '@angular/router'
  import { faPen, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
  import { AuthService } from '@services/auth.service'
+ import { TokenService } from '@services/token.service'
 
  @Component({
      selector: 'app-login-form',
@@ -14,6 +15,7 @@
      private router = inject(Router)
      private route = inject(ActivatedRoute)
      private authService = inject(AuthService)
+     private tokenService = inject(TokenService)
 
      faPen = faPen
      faEye = faEye
@@ -60,7 +62,7 @@
              .subscribe({
                  next: () => {
 
-                    this.router.navigate(['/app'])
+                     this.router.navigate(['/app'])
 
                  },
                  error: () => {

@@ -1,8 +1,12 @@
  import { Injectable, inject } from '@angular/core'
  import { HttpClient } from '@angular/common/http'
+ import { TokenService } from './token.service'
 
  import { environment } from '@environments/environment'
- import { switchMap } from 'rxjs/operators'
+ import { switchMap, tap } from 'rxjs/operators'
+ import { ResponseLogin } from '@models/auth.models'
+ import { User } from '@models/user.models'
+
 
  @Injectable({
      providedIn: 'root'
@@ -10,6 +14,7 @@
  export class AuthService {
 
      private http = inject(HttpClient)
+     private tokenService = inject(TokenService)
 
      apiUrl = environment.API_URL
 
@@ -19,10 +24,15 @@
 
      login(email: string, password: string) {
 
-         return this.http.post(`${this.apiUrl}/api/v1/auth/login`, {
+         return this.http.post<ResponseLogin>(`${this.apiUrl}/api/v1/auth/login`, {
              email,
              password
          })
+         .pipe(
+             tap(response => {
+                 this.tokenService.saveToken(response.access_token)
+             })
+         )
 
      }
 
@@ -80,6 +90,29 @@
      }
 
      // --------------------------------------------------------------------------------------------
+
+     getProfile() {
+
+         const token = this.tokenService.getToken()
+
+         return this.http.get<User>(`${this.apiUrl}/api/v1/auth/profile`, {
+             headers: {
+                 Authorizarion: `Bearer ${token}`
+
+             }
+         })
+     }
+
+     // --------------------------------------------------------------------------------------------
+
+     logout() {
+
+         this.tokenService.removeToken()
+
+     }
+
+     // --------------------------------------------------------------------------------------------
+
 
 
  }
