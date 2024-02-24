@@ -1,4 +1,4 @@
- import { Component, inject, OnInit  } from '@angular/core'
+ import { Component, inject  } from '@angular/core'
  import { Router } from '@angular/router'
  import {
      faBell,
@@ -6,7 +6,7 @@
      faClose,
      faAngleDown
  } from '@fortawesome/free-solid-svg-icons'
- import { User } from '@models/user.models'
+
 
  import { AuthService } from '@services/auth.service'
 
@@ -14,7 +14,7 @@
      selector: 'app-navbar',
      templateUrl: './navbar.component.html',
  })
- export class NavbarComponent implements OnInit{
+ export class NavbarComponent {
      private authService = inject(AuthService)
      private router = inject(Router)
      faBell = faBell
@@ -25,19 +25,9 @@
      isOpenOverlayAvatar = false
      isOpenOverlayBoards = false
 
-     user!: User | null
+     user$ = this.authService.user$
 
      constructor() {}
-
-     ngOnInit(): void {
-
-         this.authService.getProfile().subscribe(user => {
-
-             this.user = user
-
-         })
-
-     }
 
      logout() {
 
