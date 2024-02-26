@@ -34,6 +34,19 @@
          .pipe(
              tap(response => {
                  this.tokenService.saveToken(response.access_token)
+                 this.tokenService.saveRefreshToken(response.refresh_token)
+             })
+         )
+
+     }
+
+     refrehsToken (refrehsToken: string) {
+
+         return this.http.post<ResponseLogin>(`${this.apiUrl}/api/v1/auth/refresh-token`, { refrehsToken })
+         .pipe(
+             tap(response => {
+                 this.tokenService.saveToken(response.access_token)
+                 this.tokenService.saveRefreshToken(response.refresh_token)
              })
          )
 
